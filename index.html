@@ -1,35 +1,10 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Molecule AR Viewer</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:sans-serif}
-    model-viewer{width:80vw;height:60vh}
-  </style>
-</head>
-<body>
-  <h2>View Molecule in AR</h2>
+<a rel="ar" href="https://drive.google.com/uc?export=download&id=1f3SfS4HkDIPNKYU0Kp-hc7834MYBJIi_">
+  👆 iPhone/iPad: Tap to open in AR
+</a>
 
-  <!-- iPhone/iPad: AR Quick Look -->
-  <a rel="ar" href="https://drive.google.com/uc?export=download&id=1f3SfS4HkDIPNKYU0Kp-hc7834MYBJIi_">
-    👆 iPhone/iPad: Tap to open in AR
-  </a>
-
-  <!-- Universal viewer: Android gets Scene Viewer; Desktop 3D; iOS uses ios-src -->
-  <model-viewer
-    src="https://drive.google.com/uc?export=download&id=1rreopKGaijo2K8sHk9KExMqsaKDsbvTx"
-    ios-src="https://drive.google.com/uc?export=download&id=1f3SfS4HkDIPNKYU0Kp-hc7834MYBJIi_"
-    ar
-    ar-modes="quick-look scene-viewer webxr"
-    camera-controls
-    auto-rotate
-    shadow-intensity="1"
-    crossorigin="anonymous">
-  </model-viewer>
-
-  <p>Android: tap the AR button in the viewer.</p>
-</body>
-</html>
+<model-viewer
+  src="https://drive.google.com/uc?export=download&id=1rreopKGaijo2K8sHk9KExMqsaKDsbvTx"
+  ios-src="https://drive.google.com/uc?export=download&id=1f3SfS4HkDIPNKYU0Kp-hc7834MYBJIi_"
+  ar ar-modes="quick-look scene-viewer webxr"
+  camera-controls auto-rotate shadow-intensity="1">
+</model-viewer>
