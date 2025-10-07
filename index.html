@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Molecule AR</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      body { margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; }
-      model-viewer { width: 100%; height: 100%; }
-    </style>
-  </head>
-  <body>
-    <model-viewer 
-      src="molecule.glb"
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      camera-controls
-      auto-rotate
-      shadow-intensity="1">
-    </model-viewer>
-  </body>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>body{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;gap:16px}</style>
+</head>
+<body>
+  <h2>View Molecule in AR</h2>
+  <a rel="ar" href="molecule.usdz">👆 iPhone/iPad: Tap to view in AR</a>
+  <model-viewer src="molecule.glb" ios-src="molecule.usdz" ar ar-modes="quick-look scene-viewer webxr" camera-controls auto-rotate style="width:80vw;height:60vh"></model-viewer>
+  <p>Android: tap the AR button in the viewer.</p>
+</body>
 </html>
+
