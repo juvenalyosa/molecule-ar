@@ -6,24 +6,20 @@
   <title>Molecule AR Viewer</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    :root { color-scheme: light; }
-    body{
-      margin:0; min-height:100vh; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; gap:16px; font-family:system-ui, Arial, sans-serif;
-    }
-    h1{ font-size:1.25rem; margin:0; }
-    model-viewer{ width: min(90vw, 900px); height: min(70vh, 650px); }
-    a.button{ text-decoration:none; padding:.7rem 1rem; border-radius:999px; border:1px solid #ccc; }
-    small{ opacity:.7 }
+    body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:system-ui,Arial,sans-serif}
+    h1{margin:0;font-size:1.25rem}
+    model-viewer{width:min(90vw,900px);height:min(70vh,650px)}
+    a.button{padding:.7rem 1rem;border:1px solid #ccc;border-radius:999px;text-decoration:none}
+    small{opacity:.7}
   </style>
 </head>
 <body>
   <h1>View Molecule in AR</h1>
 
-  <!-- iPhone/iPad: AR Quick Look -->
+  <!-- iPhone/iPad (AR Quick Look) -->
   <a class="button" rel="ar" href="./molecule.usdz">👆 iPhone / iPad: Open in AR</a>
 
-  <!-- Android → AR button; Desktop → 3D viewer; iOS uses ios-src -->
+  <!-- Android (Scene Viewer) + Desktop 3D; iOS will use ios-src -->
   <model-viewer
     src="./molecule.glb"
     ios-src="./molecule.usdz"
@@ -32,10 +28,10 @@
     camera-controls
     auto-rotate
     shadow-intensity="1"
-    exposure="1.1"
+    exposure="1.05"
     crossorigin="anonymous">
   </model-viewer>
 
-  <small>Android: tap the AR cube button. • Desktop: rotate the model.</small>
+  <small>Android: tap the AR cube. • Desktop: rotate with the mouse.</small>
 </body>
 </html>
