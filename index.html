@@ -4,119 +4,39 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Molecule AR Viewer</title>
-
-  <!-- model-viewer (3D + AR) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
   <style>
-    :root { color-scheme: light; }
-    body{
-      margin:0; min-height:100vh; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; gap:14px; font-family:system-ui, Arial, sans-serif;
-    }
-    h1{ margin:0; font-size:1.15rem; }
-    model-viewer{ width:min(92vw, 980px); height:min(70vh, 640px); background:#fff; }
-    .toolbar{
-      display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;
-    }
-    .btn{
-      border:1px solid #ccc; border-radius:10px; padding:.45rem .7rem; background:#fff; cursor:pointer;
-      font: 13px/1 system-ui; user-select:none;
-    }
-    .btn:active{ transform:translateY(1px); }
-    .hint{ opacity:.75; font-size:.9rem; }
-    a.button{ text-decoration:none; border:1px solid #ccc; border-radius:999px; padding:.5rem .9rem; }
+    body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:system-ui,Arial,sans-serif}
+    h1{margin:0;font-size:1.1rem}
+    model-viewer{width:min(92vw,980px);height:min(70vh,640px);background:#fff}
+    .hint{opacity:.75;font-size:.9rem;text-align:center;max-width:900px}
+    a.button{padding:.55rem .9rem;border:1px solid #ccc;border-radius:999px;text-decoration:none}
   </style>
 </head>
 <body>
   <h1>View Molecule in AR</h1>
 
-  <!-- iPhone/iPad: AR Quick Look -->
-  <a class="button" rel="ar" href="./molecule.usdz">👆 iPhone / iPad: Open in AR</a>
+  <!-- iPhone/iPad: force scaling allowed in Quick Look -->
+  <a class="button" rel="ar" href="./molecule.usdz#allowsContentScaling=1">👆 iPhone / iPad: Open in AR</a>
 
-  <!-- 3D viewer (full manipulation) + AR button for Android -->
+  <!-- 3D viewer (rotate/zoom freely) + AR button for Android -->
   <model-viewer id="mv"
     src="./molecule.glb"
-    ios-src="./molecule.usdz"
+    ios-src="./molecule.usdz#allowsContentScaling=1"
     ar
     ar-modes="quick-look scene-viewer webxr"
-    camera-controls            <!-- enables orbit/zoom in the 3D viewer -->
+    ar-scale="auto"          <!-- ensure scaling is permitted in AR -->
+    ar-placement="floor"
+    camera-controls          <!-- full manipulation in the on-page 3D viewer -->
     auto-rotate
-    auto-rotate-delay="3000"
+    auto-rotate-delay="2500"
     shadow-intensity="1"
     exposure="1.05">
   </model-viewer>
 
-  <!-- Controls for the 3D viewer (not AR mode) -->
-  <div class="toolbar">
-    <button class="btn" id="rotL">⟲ Left</button>
-    <button class="btn" id="rotR">⟳ Right</button>
-    <button class="btn" id="rotUp">↑ Up</button>
-    <button class="btn" id="rotDn">↓ Down</button>
-    <button class="btn" id="zoIn">＋ Zoom In</button>
-    <button class="btn" id="zoOut">－ Zoom Out</button>
-    <button class="btn" id="reset">Reset</button>
-    <button class="btn" id="toggle">▶︎ Auto-rotate</button>
-  </div>
-
   <div class="hint">
-    3D viewer: drag = rotate • wheel/pinch = zoom • R = toggle auto-rotate • Arrows = rotate • +/- = zoom.
-    In AR: drag = move • pinch = scale • twist = rotate (vertical). Walk around to view.
+    <b>3D viewer (on this page):</b> drag = rotate • wheel/pinch = zoom • double-tap = recenter.<br>
+    <b>In AR:</b> drag = move • pinch = scale • two-finger twist = rotate (around vertical). Walk around the model to see other angles.
   </div>
-
-  <script>
-    const mv = document.getElementById('mv');
-
-    // helpers
-    function orbit(dThetaDeg=0, dPhiDeg=0) {
-      const o = mv.getCameraOrbit();                 // {theta, phi, radius} in radians/meters
-      const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
-      const toRad = d => d * Math.PI / 180;
-
-      const theta = o.theta + toRad(dThetaDeg);
-      // keep phi away from 0/π to avoid gimbal lock
-      const phi = clamp(o.phi + toRad(dPhiDeg), toRad(5), Math.PI - toRad(5));
-
-      mv.cameraOrbit = `${theta}rad ${phi}rad ${o.radius}`;
-      mv.jumpCameraToGoal();
-    }
-
-    function zoom(dFovDeg=0) {
-      const fov = mv.getFieldOfView();               // degrees
-      const nf = Math.min(80, Math.max(10, fov + dFovDeg));
-      mv.fieldOfView = `${nf}deg`;
-      mv.jumpCameraToGoal();
-    }
-
-    function reset() {
-      mv.autoRotate = false;
-      mv.cameraOrbit = `0deg 75deg 100%`;
-      mv.fieldOfView = `45deg`;
-      mv.jumpCameraToGoal();
-    }
-
-    // buttons
-    document.getElementById('rotL').onclick = () => orbit(-15, 0);
-    document.getElementById('rotR').onclick = () => orbit( 15, 0);
-    document.getElementById('rotUp').onclick = () => orbit(0, -10);
-    document.getElementById('rotDn').onclick = () => orbit(0,  10);
-    document.getElementById('zoIn').onclick = () => zoom(-5);
-    document.getElementById('zoOut').onclick = () => zoom( 5);
-    document.getElementById('reset').onclick = reset;
-    document.getElementById('toggle').onclick = () => mv.autoRotate = !mv.autoRotate;
-
-    // keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      const k = e.key.toLowerCase();
-      if (k === 'r') mv.autoRotate = !mv.autoRotate;
-      else if (e.key === 'ArrowLeft')  orbit(-10, 0);
-      else if (e.key === 'ArrowRight') orbit( 10, 0);
-      else if (e.key === 'ArrowUp')    orbit(0, -8);
-      else if (e.key === 'ArrowDown')  orbit(0,  8);
-      else if (k === '+' || e.key === '=') zoom(-4);
-      else if (k === '-' )                 zoom( 4);
-      else if (k === '0') reset();
-    });
-  </script>
 </body>
 </html>
