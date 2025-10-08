@@ -2,41 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Molecule AR Viewer</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js">
+  </script>
   <style>
-    body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:system-ui,Arial,sans-serif}
-    h1{margin:0;font-size:1.1rem}
-    model-viewer{width:min(92vw,980px);height:min(70vh,640px);background:#fff}
-    .hint{opacity:.75;font-size:.9rem;text-align:center;max-width:900px}
-    a.button{padding:.55rem .9rem;border:1px solid #ccc;border-radius:999px;text-decoration:none}
+    html,body { margin:0; height:100%; }
+    #wrap { height:100%; display:flex; flex-direction:column; gap:12px;
+            align-items:center; justify-content:center; font-family:system-ui,Arial,sans-serif; }
+    model-viewer { width:min(92vw, 980px); height:min(72vh, 640px); }
+    a.button { text-decoration:none; border:1px solid #ccc; border-radius:999px; padding:.5rem .9rem; }
+    /* ensure nothing overlays the viewer */
+    * { pointer-events:auto; }
   </style>
 </head>
 <body>
-  <h1>View Molecule in AR</h1>
+  <div id="wrap">
+    <a class="button" rel="ar" href="./molecule.usdz#allowsContentScaling=1">👆 iPhone / iPad: Open in AR</a>
 
-  <!-- iPhone/iPad: force scaling allowed in Quick Look -->
-  <a class="button" rel="ar" href="./molecule.usdz#allowsContentScaling=1">👆 iPhone / iPad: Open in AR</a>
+    <model-viewer id="mv"
+      src="./molecule.glb"
+      ios-src="./molecule.usdz#allowsContentScaling=1"
+      ar
+      ar-modes="quick-look scene-viewer webxr"
+      camera-controls                 <!-- enables rotate/zoom in the browser -->
+      camera-orbit="0deg 75deg 100%"  <!-- sensible starting view -->
+      field-of-view="45deg"
+      exposure="1.05"
+      interaction-prompt="auto">
+    </model-viewer>
 
-  <!-- 3D viewer (rotate/zoom freely) + AR button for Android -->
-  <model-viewer id="mv"
-    src="./molecule.glb"
-    ios-src="./molecule.usdz#allowsContentScaling=1"
-    ar
-    ar-modes="quick-look scene-viewer webxr"
-    ar-scale="auto"          <!-- ensure scaling is permitted in AR -->
-    ar-placement="floor"
-    camera-controls          <!-- full manipulation in the on-page 3D viewer -->
-    auto-rotate
-    auto-rotate-delay="2500"
-    shadow-intensity="1"
-    exposure="1.05">
-  </model-viewer>
-
-  <div class="hint">
-    <b>3D viewer (on this page):</b> drag = rotate • wheel/pinch = zoom • double-tap = recenter.<br>
-    <b>In AR:</b> drag = move • pinch = scale • two-finger twist = rotate (around vertical). Walk around the model to see other angles.
+    <div style="opacity:.7;font-size:.9rem;text-align:center">
+      3D viewer: drag = rotate • wheel/pinch = zoom. In AR: drag=move • pinch=scale • twist=rotate (vertical).
+    </div>
   </div>
+
+  <script>
+    const mv = document.getElementById('mv');
+    mv.addEventListener('load', () => console.log('GLB loaded OK'));
+    mv.addEventListener('error', e => {
+      alert('Failed to load model. Check file names/paths.\n' + (e?.detail?.type || ''));
+    });
+  </script>
 </body>
 </html>
